@@ -15,10 +15,9 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      $repo = New-Item -Path "$(Build.SourcesDirectory)" -Name "az-new" -ItemType "directory"
-      Write-Host $repo.FullName
+      New-Item -Path "$(Build.SourcesDirectory)" -Name "az-new" -ItemType "directory"
       $webClient = new-object system.net.webclient
-      $webClient.DownloadFile("https://modulestorage.blob.bellevue.azurestack.corp.microsoft.com/azaccountscontainer/Az.Accounts.2.1.2.nupkg", "$repo.FullName\Az.Accounts.2.1.2.nupkg")
+      $webClient.DownloadFile("https://modulestorage.blob.bellevue.azurestack.corp.microsoft.com/azaccountscontainer/Az.Accounts.2.1.2.nupkg", "$(Build.SourcesDirectory)\az-new\Az.Accounts.2.1.2.nupkg")
 
 - task: PowerShell@2
   inputs:
