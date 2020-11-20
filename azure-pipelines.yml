@@ -1,0 +1,27 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  name: Hosted VS2017
+
+steps:
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      $webClient = new-object system.net.webclient
+      $webClient.DownloadFile("https://modulestorage.blob.bellevue.azurestack.corp.microsoft.com/azaccountscontainer/Az.Accounts.2.1.2.nupkg", "$(Build.SourcesDirectory)\Az.Accounts.2.1.2.nupkg")
+    pwsh: true
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: 'ls'
+    pwsh: true
