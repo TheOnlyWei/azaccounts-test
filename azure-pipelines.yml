@@ -15,6 +15,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       New-Item -Path "$(Build.SourcesDirectory)" -Name "az-new" -ItemType "directory"
       $webClient = new-object system.net.webclient
       $webClient.DownloadFile("https://modulestorage.blob.bellevue.azurestack.corp.microsoft.com/azaccountscontainer/Az.Accounts.2.1.2.nupkg", "$(Build.SourcesDirectory)\az-new\Az.Accounts.2.1.2.nupkg")
