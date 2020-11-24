@@ -45,10 +45,11 @@ steps:
       Install-Module Az.KeyVault -Repository az-new -Force
       Write-Host "Running Get-AzEnvironment..."
       Get-AzEnvironment
-      Write-Host "Running Get-AzKeyVault..."
-      Get-AzKeyVault
       Write-Host "Running Get-AzResourceGroup..."
       Get-AzResourceGroup
+      Write-Host "Running Get-AzKeyVault..."
+      Get-AzKeyVault
+
       
 
 - task: PowerShell@2
