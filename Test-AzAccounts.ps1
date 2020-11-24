@@ -41,7 +41,8 @@ param
     [Parameter(Mandatory=$true)]
     [ValidateNotNull()]
     [string] $ClientSecret,
-
+<#
+TODO: Add test for certificate-based SP
     [Parameter(Mandatory=$true)]
     [ValidateNotNull()]
     [string] $ClientIDForCertificate,
@@ -50,7 +51,7 @@ param
     [ValidateNotNullOrEmpty()]
     [ValidatePattern('^([0-9A-Fa-f]{2})*$')]
     [string] $CertificateThumbprint,
-
+#>
     # Optional subscription to select as the active / default subscription.
     [Parameter(Mandatory=$false)]
     [ValidateNotNullOrEmpty()]
@@ -140,7 +141,8 @@ $TestServicePrincipalSecretLogin =
         throw "Connect-AzAccount command timed out."
     }
 }
-
+<#
+TODO: Add test for certificate-based SP
 $TestServicePrincipalCertificateLogin =
 {
     $sleepSecondsUnit = 5
@@ -188,13 +190,15 @@ $TestServicePrincipalCertificateLogin =
         throw "Connect-AzAccount command timed out."
     }
 }
+#>
 
 function Main
 {
     Import-Module Az.Accounts
 
-    Test -TestName "TestAzAccounts" -TestBlock $TestAddAzEnvironment
-    Test -TestName "TestServicePrincipalCertificateLogin" -TestBlock $TestServicePrincipalCertificateLogin
+    Test -TestName "TestAddAzEnvironment" -TestBlock $TestAddAzEnvironment
+    # TODO: Add test for certificate-based SP
+    # Test -TestName "TestServicePrincipalCertificateLogin" -TestBlock $TestServicePrincipalCertificateLogin
     Test -TestName "TestServicePrincipalSecretLogin" -TestBlock $TestServicePrincipalSecretLogin
 }
 
