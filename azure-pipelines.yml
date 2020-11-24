@@ -28,13 +28,18 @@ steps:
       Write-Host "Installing Az.KeyVault..."
       $webClient.DownloadFile("https://modulestorage.blob.bellevue.azurestack.corp.microsoft.com/azaccountscontainer/Az.KeyVault.${azKeyVaultVersion}.nupkg", "$(Build.SourcesDirectory)\az-new\Az.KeyVault.${azKeyVaultVersion}.nupkg")
       Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-      $parameters = @{
-        Name = "az-new"
-        SourceLocation = "$(Build.SourcesDirectory)\az-new\"
-        PublishLocation = "$(Build.SourcesDirectory)\az-new\"
-        InstallationPolicy = 'Trusted'
+      
+      if (!(Get-PSRepository -name az-new))
+      {
+        $parameters = @{
+          Name = "az-new"
+          SourceLocation = "$(Build.SourcesDirectory)\az-new\"
+          PublishLocation = "$(Build.SourcesDirectory)\az-new\"
+          InstallationPolicy = 'Trusted'
+        }
+        Register-PSRepository @parameters
       }
-      Register-PSRepository @parameters
+
       Install-Module Az.Accounts -Repository az-new -Force
       Install-Module Az.Resources -Repository az-new -Force
       Install-Module Az.KeyVault -Repository az-new -Force
