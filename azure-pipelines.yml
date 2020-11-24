@@ -27,8 +27,6 @@ steps:
       }
       Register-PSRepository @parameters
       Install-Module Az.Accounts -Repository az-new -Force
-      Get-AzContext
-      Get-AzEnvironment
 
 - task: PowerShell@2
   inputs:
