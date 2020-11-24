@@ -19,6 +19,7 @@ steps:
       New-Item -Path "$(Build.SourcesDirectory)" -Name "az-new" -ItemType "directory"
       $webClient = new-object system.net.webclient
       $webClient.DownloadFile("https://modulestorage.blob.bellevue.azurestack.corp.microsoft.com/azaccountscontainer/Az.Accounts.2.1.2.nupkg", "$(Build.SourcesDirectory)\az-new\Az.Accounts.2.1.2.nupkg")
+      Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
       $parameters = @{
         Name = "az-new"
         SourceLocation = "$(Build.SourcesDirectory)\az-new\"
