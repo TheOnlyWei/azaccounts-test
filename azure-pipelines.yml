@@ -21,8 +21,11 @@ steps:
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       New-Item -Path "$(Build.SourcesDirectory)" -Name "az-new" -ItemType "directory"
       $webClient = new-object system.net.webclient
+      Write-Host "Installing Az.Accounts..."
       $webClient.DownloadFile("https://modulestorage.blob.bellevue.azurestack.corp.microsoft.com/azaccountscontainer/Az.Accounts.${azAccountsVersion}.nupkg", "$(Build.SourcesDirectory)\az-new\Az.Accounts.${azAccountsVersion}.nupkg")
-      $webClient.DownloadFile("https://modulestorage.blob.bellevue.azurestack.corp.microsoft.com/azaccountscontainer/Az.Resource.${azResourcesVersion}.nupkg", "$(Build.SourcesDirectory)\az-new\Az.Resource.${azResourcesVersion}.nupkg")
+      Write-Host "Installing Az.Resources..."
+      $webClient.DownloadFile("https://modulestorage.blob.bellevue.azurestack.corp.microsoft.com/azaccountscontainer/Az.Resources.${azResourcesVersion}.nupkg", "$(Build.SourcesDirectory)\az-new\Az.Resources.${azResourcesVersion}.nupkg")
+      Write-Host "Installing Az.KeyVault..."
       $webClient.DownloadFile("https://modulestorage.blob.bellevue.azurestack.corp.microsoft.com/azaccountscontainer/Az.KeyVault.${azKeyVaultVersion}.nupkg", "$(Build.SourcesDirectory)\az-new\Az.KeyVault.${azKeyVaultVersion}.nupkg")
       Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
       $parameters = @{
