@@ -15,10 +15,15 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
+      $azAccountsVersion = "2.1.2"
+      $azResourcesVersion = "1.10.0"
+      $azKeyVaultVersion = "0.10.0"
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       New-Item -Path "$(Build.SourcesDirectory)" -Name "az-new" -ItemType "directory"
       $webClient = new-object system.net.webclient
-      $webClient.DownloadFile("https://modulestorage.blob.bellevue.azurestack.corp.microsoft.com/azaccountscontainer/Az.Accounts.2.1.2.nupkg", "$(Build.SourcesDirectory)\az-new\Az.Accounts.2.1.2.nupkg")
+      $webClient.DownloadFile("https://modulestorage.blob.bellevue.azurestack.corp.microsoft.com/azaccountscontainer/Az.Accounts.${azAccountsVersion}.nupkg", "$(Build.SourcesDirectory)\az-new\Az.Accounts.${azAccountsVersion}.nupkg")
+      $webClient.DownloadFile("https://modulestorage.blob.bellevue.azurestack.corp.microsoft.com/azaccountscontainer/Az.Resource.${azResourcesVersion}.nupkg", "$(Build.SourcesDirectory)\az-new\Az.Resource.${azResourcesVersion}.nupkg")
+      $webClient.DownloadFile("https://modulestorage.blob.bellevue.azurestack.corp.microsoft.com/azaccountscontainer/Az.KeyVault.${azKeyVaultVersion}.nupkg", "$(Build.SourcesDirectory)\az-new\Az.KeyVault.${azKeyVaultVersion}.nupkg")
       Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
       $parameters = @{
         Name = "az-new"
@@ -28,7 +33,15 @@ steps:
       }
       Register-PSRepository @parameters
       Install-Module Az.Accounts -Repository az-new -Force
+      Install-Module Az.Resources -Repository az-new -Force
+      Install-Module Az.KeyVault -Repository az-new -Force
+      Write-Host "Running Get-AzEnvironment..."
       Get-AzEnvironment
+      Write-Host "Running Get-AzKeyVault..."
+      Get-AzKeyVault
+      Write-Host "Running Get-AzResourceGroup..."
+      Get-AzResourceGroup
+      
 
 - task: PowerShell@2
   inputs:
