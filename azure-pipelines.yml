@@ -43,8 +43,9 @@ steps:
       Install-Module Az.Accounts -Repository az-new -Force
       Install-Module Az.Resources -Repository az-new -Force
       Install-Module Az.KeyVault -Repository az-new -Force
-      Import-Module Az.Resources
-      Import-Module Az.KeyVault
+      Import-Module Az.Accounts -RequiredVersion 2.1.2 -Force
+      Import-Module Az.Resources -RequiredVersion 1.10.0 -Force
+      Import-Module Az.KeyVault -RequiredVersion 0.10.0 -Force
       Write-Host "Running Get-AzEnvironment..."
       Get-AzEnvironment
       Write-Host "Running Get-AzResourceGroup..."
