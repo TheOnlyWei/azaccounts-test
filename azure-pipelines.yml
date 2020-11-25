@@ -43,6 +43,8 @@ steps:
       Install-Module Az.Accounts -Repository az-new -Force
       Install-Module Az.Resources -Repository az-new -Force
       Install-Module Az.KeyVault -Repository az-new -Force
+      Import-Module Az.Resources
+      Import-Module Az.KeyVault
       Write-Host "Running Get-AzEnvironment..."
       Get-AzEnvironment
       Write-Host "Running Get-AzResourceGroup..."
