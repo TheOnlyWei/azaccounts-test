@@ -15,7 +15,7 @@ steps:
   inputs:
     azureSubscription: 'Bellevue-AAD-SP'
     KeyVaultName: 'azurestack-kv'
-    SecretsFilter: '*'
+    SecretsFilter: 'AzureStack-SP-ID,AzureStack-SP-Secret'
     RunAsPreJob: false
 
 - task: PowerShell@2
