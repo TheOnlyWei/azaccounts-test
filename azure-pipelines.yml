@@ -11,10 +11,12 @@ pool:
 
 steps:
 
+
+
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
-    script: 'Write-Host "@@ $env:AZURESTACKSPID @@@"'
+    script: 'Write-Host $Env:AZURESTACKSPID'
     pwsh: true
 
 - task: PowerShell@2
