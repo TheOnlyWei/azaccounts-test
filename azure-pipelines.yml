@@ -13,7 +13,7 @@ steps:
 
 - task: PowerShell@2
   inputs:
-    filePath: '$(Build.SourcesDirectory)\Test-AzAccounts.ps1 -ResourceManagerEndpoint "https://management.bellevue.azurestack.corp.microsoft.com/" -TenantId "246b1785-9030-40d8-a0f0-d94b15dc002c" -ClientIDForSecret "${env:AzureStack-SP-ID}" -ClientID "${env:AzureStack-SP-Secret}" -SubscriptionId "a883f378-d48e-4897-9504-6690b0a57f9f"'
+    filePath: '$(Build.SourcesDirectory)\Test-AzAccounts.ps1 -ResourceManagerEndpoint "https://management.bellevue.azurestack.corp.microsoft.com/" -TenantId "246b1785-9030-40d8-a0f0-d94b15dc002c" -ClientIDForSecret "${env:AzureStack-SP-ID}" -ClientSecret "${env:AzureStack-SP-Secret}" -SubscriptionId "a883f378-d48e-4897-9504-6690b0a57f9f"'
     pwsh: true
 
 - task: PowerShell@2
