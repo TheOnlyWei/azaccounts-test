@@ -58,6 +58,8 @@ TODO: Add test for certificate-based SP
     [string] $SubscriptionId
 )
 
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 
+
 function Test
 {
     Param
@@ -191,7 +193,11 @@ $TestServicePrincipalCertificateLogin =
     }
 }
 #>
-
+$TestGetAzContext =
+{
+    Log -Message "Running Get-AzContext..."
+    Get-AzContext | Format-Table -AutoSize | Out-String | Write-Verbose -Verbose
+}
 function Main
 {
     Import-Module Az.Accounts
@@ -200,6 +206,7 @@ function Main
     # TODO: Add test for certificate-based SP
     # Test -TestName "TestServicePrincipalCertificateLogin" -TestBlock $TestServicePrincipalCertificateLogin
     Test -TestName "TestServicePrincipalSecretLogin" -TestBlock $TestServicePrincipalSecretLogin
+    Test -TestName "TestGetAzContext" -TestBlock $TestGetAzContext
 }
 
 Main
