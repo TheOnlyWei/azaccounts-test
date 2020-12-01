@@ -13,45 +13,8 @@ steps:
 
 - task: PowerShell@2
   inputs:
-    targetType: 'inline'
-    script: |
-      $azAccountsVersion = "2.1.2"
-      $azResourcesVersion = "1.10.0"
-      $azKeyVaultVersion = "0.10.0"
-      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      New-Item -Path "$(Build.SourcesDirectory)" -Name "az-new" -ItemType "directory"
-      $webClient = new-object system.net.webclient
-      Write-Host "Installing Az.Accounts..."
-      $webClient.DownloadFile("https://modulestorage.blob.bellevue.azurestack.corp.microsoft.com/azaccountscontainer/Az.Accounts.${azAccountsVersion}.nupkg", "$(Build.SourcesDirectory)\az-new\Az.Accounts.${azAccountsVersion}.nupkg")
-      Write-Host "Installing Az.Resources..."
-      $webClient.DownloadFile("https://modulestorage.blob.bellevue.azurestack.corp.microsoft.com/azaccountscontainer/Az.Resources.${azResourcesVersion}.nupkg", "$(Build.SourcesDirectory)\az-new\Az.Resources.${azResourcesVersion}.nupkg")
-      Write-Host "Installing Az.KeyVault..."
-      $webClient.DownloadFile("https://modulestorage.blob.bellevue.azurestack.corp.microsoft.com/azaccountscontainer/Az.KeyVault.${azKeyVaultVersion}.nupkg", "$(Build.SourcesDirectory)\az-new\Az.KeyVault.${azKeyVaultVersion}.nupkg")
-      Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-      
-      if (!(Get-PSRepository -name az-new))
-      {
-        $parameters = @{
-          Name = "az-new"
-          SourceLocation = "$(Build.SourcesDirectory)\az-new\"
-          PublishLocation = "$(Build.SourcesDirectory)\az-new\"
-          InstallationPolicy = 'Trusted'
-        }
-        Register-PSRepository @parameters
-      }
-
-      Install-Module Az.Accounts -Repository az-new -Force
-      Install-Module Az.Resources -Repository az-new -Force
-      Install-Module Az.KeyVault -Repository az-new -Force
-      Import-Module Az.Accounts -RequiredVersion 2.1.2 -Force
-      Import-Module Az.Resources -RequiredVersion 1.10.0 -Force
-      Import-Module Az.KeyVault -RequiredVersion 0.10.0 -Force
-      Write-Host "Running Get-AzEnvironment..."
-      Get-AzEnvironment
-      Write-Host "Running Get-AzResourceGroup..."
-      Get-AzResourceGroup
-      Write-Host "Running Get-AzKeyVault..."
-      Get-AzKeyVault
+    filePath: '$(Build.SourcesDirectory)\Test-AzAccounts.ps1 -ResourceManagerEndpoint "https://management.bellevue.azurestack.corp.microsoft.com/" -TenantId "246b1785-9030-40d8-a0f0-d94b15dc002c" -ClientIDForSecret "${env:AzureStack-SP-ID}" -ClientID "${env:AzureStack-SP-Secret}" -SubscriptionId "a883f378-d48e-4897-9504-6690b0a57f9f"'
+    pwsh: true
 
 - task: PowerShell@2
   inputs:
