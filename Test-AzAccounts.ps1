@@ -90,9 +90,12 @@ function AssertEquals
         [String] $Value2
     )
 
-    if (!$TestName)
+    if ($Value1 -ne $Value2)
     {
         throw "The string ${Value1} does not match the string ${Value2}."
+    }
+    else {
+        Write-Verbose -Message "The test is successful." -Verbose
     }
 }
 
