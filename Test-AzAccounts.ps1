@@ -80,6 +80,22 @@ function Test
     Write-Verbose -Message "[END]: ${TestName}`n" -Verbose
 }
 
+function AssertEquals
+{
+    Param
+    (
+        [Parameter(Mandatory=$true)]
+        [String] $Value1,
+        [Parameter(Mandatory=$true)]
+        [String] $Value2
+    )
+
+    if (!$TestName)
+    {
+        throw "The string ${Value1} does not match the string ${Value2}."
+    }
+}
+
 $TestAddAzEnvironment =
 {
     Write-Verbose -Message "Running Add-AzEnvironment..." -Verbose
@@ -198,6 +214,24 @@ $TestGetAzContext =
     Write-Verbose -Message "Running Get-AzContext..." -Verbose
     Get-AzContext | Format-List | Out-String | Write-Verbose -Verbose
 }
+
+$TestGetAzTenant =
+{
+    Write-Verbose -Message "Running Get-AzTenant..." -Verbose
+    $azTenant = Get-AzTenant
+    $azTenant | Format-List | Out-String | Write-Verbose -Verbose
+
+    $environment = Get-AzEnvironment | Where-Object {$_.Name -eq "${EnvironmentName}"}
+    $tenantName = $environment.ActiveDirectoryServiceEndpointResourceId.split("/")[2].split(".", 2)[1]
+
+    $webClient = new-object system.net.webclient
+    $JSON=$webClient.DownloadString("https://login.microsoftonline.com/${tenantName}/.well-known/openid-configuration") `
+        | ConvertFrom-Json
+    $tenantID = $JSON.token_endpoint.split("/")[3]
+
+    AssertEquals -Value1 $azTenant.Id -Value2 $tenantID -ErrorAction Continue
+}
+
 function Main
 {
     Import-Module Az.Accounts
@@ -207,6 +241,7 @@ function Main
     # Test -TestName "TestServicePrincipalCertificateLogin" -TestBlock $TestServicePrincipalCertificateLogin
     Test -TestName "TestServicePrincipalSecretLogin" -TestBlock $TestServicePrincipalSecretLogin
     Test -TestName "TestGetAzContext" -TestBlock $TestGetAzContext
+    Test -TestName "TestGetAzTenant" -TestBlock $TestGetAzTenant
 }
 
 Main
