@@ -196,7 +196,7 @@ $TestServicePrincipalCertificateLogin =
 $TestGetAzContext =
 {
     Write-Verbose -Message "Running Get-AzContext..." -Verbose
-    Get-AzContext | Format-Table -AutoSize | Out-String | Write-Verbose -Verbose
+    Get-AzContext | Format-List | Out-String | Write-Verbose -Verbose
 }
 function Main
 {
