@@ -94,7 +94,7 @@ function AssertEquals
         throw "The Value1 ${Value1} does not match the Value2 ${Value2}."
     }
     else {
-        Write-Verbose -Message "The test ${Description} is successful." -Verbose
+        Write-Verbose -Message "The ${Description} test is successful." -Verbose
     }
 }
 
@@ -112,7 +112,7 @@ function AssertNotEquals
         throw "The Value1 ${Value1} should not match the Value2 ${Value2}."
     }
     else {
-        Write-Verbose -Message "The test ${Description} is successful." -Verbose
+        Write-Verbose -Message "The ${Description} test is successful." -Verbose
     }
 }
 
