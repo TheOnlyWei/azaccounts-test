@@ -84,9 +84,7 @@ function AssertEquals
 {
     Param
     (
-        [Parameter(Mandatory=$true)]
         [Object] $Value1,
-        [Parameter(Mandatory=$true)]
         [Object] $Value2
     )
 
@@ -103,9 +101,7 @@ function AssertNotEquals
 {
     Param
     (
-        [Parameter(Mandatory=$true)]
         [Object] $Value1,
-        [Parameter(Mandatory=$true)]
         [Object] $Value2
     )
 
