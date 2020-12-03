@@ -99,6 +99,25 @@ function AssertEquals
     }
 }
 
+function AssertNotEquals
+{
+    Param
+    (
+        [Parameter(Mandatory=$true)]
+        [String] $Value1,
+        [Parameter(Mandatory=$true)]
+        [String] $Value2
+    )
+
+    if ($Value1 -eq $Value2)
+    {
+        throw "The string ${Value1} should not match the string ${Value2}."
+    }
+    else {
+        Write-Verbose -Message "The test is successful." -Verbose
+    }
+}
+
 $TestAddAzEnvironment =
 {
     Write-Verbose -Message "Running Add-AzEnvironment..." -Verbose
@@ -235,6 +254,44 @@ $TestGetAzTenant =
     AssertEquals -Value1 $azTenant.Id -Value2 $tenantID -ErrorAction Continue
 }
 
+$TestAzContextAutosave =
+{
+    $originalContext = Get-AzContextAutosaveSetting
+
+    # context autosave already disabled
+    if ($originalContext.ContextFile -eq "none")
+    {
+        # Test context autosave is disabled in new ps session
+        $job = Start-Job -ScriptBlock { Get-AzContext }
+        $context = Receive-Job -Job $job -Wait
+        AssertEquals -Value1 $context -Value2 $null
+
+        Enable-AzContextAutosave
+
+        $job = Start-Job -ScriptBlock { Get-AzContext }
+        $context = Receive-Job -Job $job -Wait
+        AssertNotEquals -Value1 $context -Value2 $null
+
+        Disable-AzContextAutosave
+    }
+    # context autosave already enabled
+    else
+    {
+        # Test context autosave is disabled in new ps session
+        $job = Start-Job -ScriptBlock { Get-AzContext }
+        $context = Receive-Job -Job $job -Wait
+        AssertNotEquals -Value1 $context -Value2 $null
+
+        Disable-AzContextAutosave
+
+        $job = Start-Job -ScriptBlock { Get-AzContext }
+        $context = Receive-Job -Job $job -Wait
+        AssertEquals -Value1 $context -Value2 $null
+
+        Enable-AzContextAutosave
+    }
+}
+
 function Main
 {
     Import-Module Az.Accounts
@@ -245,6 +302,7 @@ function Main
     Test -TestName "TestServicePrincipalSecretLogin" -TestBlock $TestServicePrincipalSecretLogin
     Test -TestName "TestGetAzContext" -TestBlock $TestGetAzContext
     Test -TestName "TestGetAzTenant" -TestBlock $TestGetAzTenant
+    Test -TestName "TestAzContextAutosave" -TestBlock $TestAzContextAutosave
 }
 
 Main
