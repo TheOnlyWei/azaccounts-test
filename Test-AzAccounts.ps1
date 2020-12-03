@@ -85,7 +85,8 @@ function AssertEquals
     Param
     (
         [Object] $Value1,
-        [Object] $Value2
+        [Object] $Value2,
+        [string] $Description
     )
 
     if ($Value1 -ne $Value2)
@@ -93,7 +94,7 @@ function AssertEquals
         throw "The Value1 ${Value1} does not match the Value2 ${Value2}."
     }
     else {
-        Write-Verbose -Message "The test is successful." -Verbose
+        Write-Verbose -Message "The test ${Description} is successful." -Verbose
     }
 }
 
@@ -102,7 +103,8 @@ function AssertNotEquals
     Param
     (
         [Object] $Value1,
-        [Object] $Value2
+        [Object] $Value2,
+        [string] $Description
     )
 
     if ($Value1 -eq $Value2)
@@ -110,7 +112,7 @@ function AssertNotEquals
         throw "The Value1 ${Value1} should not match the Value2 ${Value2}."
     }
     else {
-        Write-Verbose -Message "The test is successful." -Verbose
+        Write-Verbose -Message "The test ${Description} is successful." -Verbose
     }
 }
 
@@ -247,7 +249,7 @@ $TestGetAzTenant =
         | ConvertFrom-Json
     $tenantID = $JSON.token_endpoint.split("/")[3]
 
-    AssertEquals -Value1 $azTenant.Id -Value2 $tenantID -ErrorAction Continue
+    AssertEquals -Value1 $azTenant.Id -Value2 $tenantID -Description "Tenant ID Comparison" -ErrorAction Continue
 }
 
 $TestAzContextAutosave =
@@ -260,13 +262,13 @@ $TestAzContextAutosave =
         # Test context autosave is disabled in new ps session
         $job = Start-Job -ScriptBlock { Get-AzContext }
         $context = Receive-Job -Job $job -Wait
-        AssertEquals -Value1 $context -Value2 $null -ErrorAction Continue
+        AssertEquals -Value1 $context -Value2 $null -Description "Disable Context" -ErrorAction Continue
 
         Enable-AzContextAutosave
 
         $job = Start-Job -ScriptBlock { Get-AzContext }
         $context = Receive-Job -Job $job -Wait
-        AssertNotEquals -Value1 $context -Value2 $null -ErrorAction Continue
+        AssertNotEquals -Value1 $context -Value2 $null -Description "Enable Context" -ErrorAction Continue
 
         Disable-AzContextAutosave
     }
@@ -276,13 +278,13 @@ $TestAzContextAutosave =
         # Test context autosave is disabled in new ps session
         $job = Start-Job -ScriptBlock { Get-AzContext }
         $context = Receive-Job -Job $job -Wait
-        AssertNotEquals -Value1 $context -Value2 $null -ErrorAction Continue
+        AssertNotEquals -Value1 $context -Value2 $null -Description "Enabled Context" -ErrorAction Continue
 
         Disable-AzContextAutosave
 
         $job = Start-Job -ScriptBlock { Get-AzContext }
         $context = Receive-Job -Job $job -Wait
-        AssertEquals -Value1 $context -Value2 $null -ErrorAction Continue
+        AssertEquals -Value1 $context -Value2 $null -Description "Disabled Context" -ErrorAction Continue
 
         Enable-AzContextAutosave
     }
