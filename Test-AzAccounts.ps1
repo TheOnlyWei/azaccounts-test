@@ -85,14 +85,14 @@ function AssertEquals
     Param
     (
         [Parameter(Mandatory=$true)]
-        [String] $Value1,
+        [Object] $Value1,
         [Parameter(Mandatory=$true)]
-        [String] $Value2
+        [Object] $Value2
     )
 
     if ($Value1 -ne $Value2)
     {
-        throw "The string ${Value1} does not match the string ${Value2}."
+        throw "The Value1 ${Value1} does not match the Value2 ${Value2}."
     }
     else {
         Write-Verbose -Message "The test is successful." -Verbose
@@ -104,14 +104,14 @@ function AssertNotEquals
     Param
     (
         [Parameter(Mandatory=$true)]
-        [String] $Value1,
+        [Object] $Value1,
         [Parameter(Mandatory=$true)]
-        [String] $Value2
+        [Object] $Value2
     )
 
     if ($Value1 -eq $Value2)
     {
-        throw "The string ${Value1} should not match the string ${Value2}."
+        throw "The Value1 ${Value1} should not match the Value2 ${Value2}."
     }
     else {
         Write-Verbose -Message "The test is successful." -Verbose
@@ -264,13 +264,13 @@ $TestAzContextAutosave =
         # Test context autosave is disabled in new ps session
         $job = Start-Job -ScriptBlock { Get-AzContext }
         $context = Receive-Job -Job $job -Wait
-        AssertEquals -Value1 $context -Value2 $null
+        AssertEquals -Value1 $context -Value2 $null -ErrorAction Continue
 
         Enable-AzContextAutosave
 
         $job = Start-Job -ScriptBlock { Get-AzContext }
         $context = Receive-Job -Job $job -Wait
-        AssertNotEquals -Value1 $context -Value2 $null
+        AssertNotEquals -Value1 $context -Value2 $null -ErrorAction Continue
 
         Disable-AzContextAutosave
     }
@@ -280,13 +280,13 @@ $TestAzContextAutosave =
         # Test context autosave is disabled in new ps session
         $job = Start-Job -ScriptBlock { Get-AzContext }
         $context = Receive-Job -Job $job -Wait
-        AssertNotEquals -Value1 $context -Value2 $null
+        AssertNotEquals -Value1 $context -Value2 $null -ErrorAction Continue
 
         Disable-AzContextAutosave
 
         $job = Start-Job -ScriptBlock { Get-AzContext }
         $context = Receive-Job -Job $job -Wait
-        AssertEquals -Value1 $context -Value2 $null
+        AssertEquals -Value1 $context -Value2 $null -ErrorAction Continue
 
         Enable-AzContextAutosave
     }
